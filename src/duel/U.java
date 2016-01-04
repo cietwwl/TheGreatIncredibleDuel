@@ -54,8 +54,15 @@ public class U
     public static void showXl(Hero p)
     {
         waitSeconds(Const.INTERVEL / 2);
-        U.dayin(p.name + "**生命:" + p.xl + "**能量:" + p.ql + "**攻击:" + p.gj
-                + "**防御:" + p.fy);
+        String strBuff = "";
+        for (Buff buff : p.buffList)
+        {
+            if (buff.roundNum > 0)
+                strBuff = strBuff + "  *" + buff.name;
+            buff.roundStartDo();
+        }
+        U.dayin(p.name + "\t生命:" + p.xl + "\t能量:" + p.ql + "\t攻击:" + p.gj
+                + "\t防御:" + p.fy + "  " + strBuff);
     }
 
     public static void waitSeconds(double s)
@@ -140,6 +147,8 @@ public class U
             d = 1.4;
         else if (crit <= 35)
             d = 0.7;
+        for (Critical c : Main.critList)
+            d = c.buffCrit(d, caster);
         return d;
     }
 
@@ -151,11 +160,13 @@ public class U
             U.dayin(caster.name + "打出了致命的一击，效果拔群!");
         else if (0.7 == d)
             U.dayin(caster.name + "发出奋力一击，然而并没有准确命中");
+        else if (1.8 == d)
+            U.dayin(caster.name + "猛烈一击，打出成吨伤害！");
     }
 
     public static void incCaster(Hero caster, double damage)
     {
-        caster.ql = caster.ql + (int) (damage / 10 + 0.5);
+        caster.ql = caster.ql + (int) (damage / 12 + 0.5);
     }
 
     public static void incTarget(Hero target, double damage)
